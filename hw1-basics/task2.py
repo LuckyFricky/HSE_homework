@@ -23,13 +23,25 @@ def filter_events_after(log_lines: list[str], user: str, after_time: str) -> lis
         filter_events_after(["10:00 alice login", "14:30 alice click"], "alice", "12:00")
         -> ["14:30 alice click"]
     """
-    # TODO: ваш код здесь
+    answer = []
+    for line in log_lines:
+        log_user = line.split(' ')[1]
+        time= line.split(' ')[0]
+        minute = int(time.split(':')[1])
+        hour = int(time.split(':')[0])
+        after_hour = int(after_time.split(":")[0])
+        after_minute = int(after_time.split(":")[1])
+        if user == log_user and ((hour > after_hour)  or (hour == after_hour and minute > after_minute)) :
+            answer.append(line)
+
+    return answer
+
     ...
 
 
 if __name__ == "__main__":
     # Готовый код запуска - менять не нужно.
-    with open("data/task2_log.txt", encoding="utf-8") as f:
+    with open("hw1-basics/data/task2_log.txt", encoding="utf-8") as f:
         log_lines = [line.strip() for line in f if line.strip()]
 
     result = filter_events_after(log_lines, "mktbot7", "19:00")
