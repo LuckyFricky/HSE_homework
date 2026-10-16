@@ -20,11 +20,19 @@ def parse_campaign(line: str) -> dict:
         parse_campaign("ADV01-001;1000;50;30.0")
         -> {"campaign_id": "ADV01-001", "impressions": 1000, "clicks": 50, "spend": 30.0}
     """
-    # TODO: ваш код здесь
+    campaign_id, impressions, clicks, spend = line.strip().split(";")
+
+    return {
+        "campaign_id": campaign_id,
+        "impressions": int(impressions),
+        "clicks": int(clicks),
+        "spend": float(spend)
+    }
     ...
 
 
 def calc_ctr(clicks: int, impressions: int) -> float:
+
     """
     CTR = clicks / impressions.
 
@@ -35,7 +43,10 @@ def calc_ctr(clicks: int, impressions: int) -> float:
         calc_ctr(50, 1000) -> 0.05
         calc_ctr(0, 0) -> 0.0
     """
-    # TODO: ваш код здесь
+    if impressions <= 0:
+        return 0.0
+    else:
+        return clicks / impressions
     ...
 
 
@@ -49,7 +60,10 @@ def calc_cpc(spend: float, clicks: int) -> float:
         calc_cpc(30.0, 50) -> 0.6
         calc_cpc(75.0, 0) -> 0.0
     """
-    # TODO: ваш код здесь
+    if clicks <= 0:
+        return 0.0
+    else:
+        return spend / clicks
     ...
 
 
@@ -78,7 +92,24 @@ def merge_duplicate_campaigns(records: list[dict]) -> list[dict]:
             {"campaign_id": "b", "impressions": 200, "clicks": 20, "spend": 8.0},
         ]
     """
-    # TODO: ваш код здесь
+    campaigns = {}
+
+    for record in records:
+        campaign_id = record["campaign_id"]
+
+        if campaign_id not in campaigns:
+            campaigns[campaign_id] = {
+                "campaign_id": campaign_id,
+                "impressions": record["impressions"],
+                "clicks": record["clicks"],
+                "spend": record["spend"]
+            }
+        else:
+            campaigns[campaign_id]["impressions"] += record["impressions"]
+            campaigns[campaign_id]["clicks"] += record["clicks"]
+            campaigns[campaign_id]["spend"] += record["spend"]
+
+    return list(campaigns.values())
     ...
 
 
@@ -98,13 +129,14 @@ def format_report(rows: list[dict]) -> str:
         format_report([{"campaign_id": "a", "impressions": 1000, "clicks": 50, "spend": 30.0}])
         -> "a: CTR=5.00% CPC=0.60"
     """
-    # TODO: ваш код здесь
+    raw_line = rows.split(";")
+    
     ...
 
 
 if __name__ == "__main__":
     # Готовый код запуска - менять не нужно.
-    with open("data/campaigns_sample.txt", encoding="utf-8") as f:
+    with open("hw2-functions/data/campaigns_sample.txt", encoding="utf-8") as f:
         records = [parse_campaign(line) for line in f if line.strip()]
 
     merged = merge_duplicate_campaigns(records)

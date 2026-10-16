@@ -15,7 +15,14 @@ def unique_advertisers(campaign_ids: list[str]) -> list[str]:
         unique_advertisers(["ADV07-014", "ADV01-002", "ADV07-015", "ADV03-009"])
         -> ["ADV07", "ADV01", "ADV03"]
     """
-    # TODO: ваш код здесь
+    unique_campaigns = []
+
+    for campaign in campaign_ids: 
+        ad = campaign.split("-")[0]
+        if ad not in unique_campaigns:
+            unique_campaigns.append(ad)
+    return unique_campaigns
+
     ...
 
 

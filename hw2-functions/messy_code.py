@@ -56,4 +56,4 @@ def generate_campaign_report(path):
 
 
 if __name__ == "__main__":
-    generate_campaign_report("data/campaigns_sample.txt")
+    generate_campaign_report("hw2-functions/data/campaigns_sample.txt")

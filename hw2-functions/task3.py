@@ -27,7 +27,33 @@ def aggregate_campaigns(*reports: list[dict], sort_by: str = "ctr", reverse: boo
         )
         -> [{..., "campaign_id": "a", "ctr": 0.05, ...}, {..., "campaign_id": "b", "ctr": 0.03, ...}]
     """
-    # TODO: ваш код здесь
+    result = []
+
+    # Объединяем все отчёты
+    for report in reports:
+        for campaign in report:
+
+            campaign_copy = campaign.copy()
+
+            if campaign_copy["impressions"] == 0:
+                campaign_copy["ctr"] = 0.0
+            else:
+                campaign_copy["ctr"] =  campaign_copy["clicks"] / campaign_copy["impressions"]
+
+
+            if campaign_copy["clicks"] == 0:
+                campaign_copy["cpc"] = 0.0
+            else:
+                campaign_copy["cpc"] =  campaign_copy["spend"]  / campaign_copy["clicks"]
+                
+
+            result.append(campaign_copy)
+
+    result.sort(
+        key=lambda campaign: campaign[sort_by],
+        reverse=reverse
+    )
+    return result
     ...
 
 
@@ -52,7 +78,22 @@ def log_alert(campaign_id: str, message: str, log: list[str] | None = None, **ta
         log_alert("c", "spend spike", severity="high", channel="email")
         -> ["c: spend spike [channel=email, severity=high]"]
     """
-    # TODO: ваш код здесь
+    if log is None:
+        log = []
+
+    entry = f"{campaign_id}: {message}"
+
+    if tags:
+        formatted_tags = ", ".join(
+            f"{key}={value}"
+            for key, value in sorted(tags.items())
+        )
+
+        entry += f" [{formatted_tags}]"
+
+    log.append(entry)
+
+    return log
     ...
 
 
